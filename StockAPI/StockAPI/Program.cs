@@ -8,6 +8,7 @@ using StockAPI.DataAccess.CQRS;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<ICommandExecutor, CommandExecutor>();
 builder.Services.AddTransient<IQuerryExecutor, QuerryExecutor>();
 builder.Services.AddAutoMapper(typeof(ItemsProfile).Assembly);
 builder.Services.AddMediatR(typeof(ResponseBase<>));
