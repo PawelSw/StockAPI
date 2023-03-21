@@ -3,29 +3,32 @@ using MediatR;
 using StockApi.ApplicationServices.API.Domain.ItemServices;
 using StockApi.ApplicationServices.API.Domain.SupplierServices;
 using StockAPI.DataAccess;
+using StockAPI.DataAccess.CQRS;
+using StockAPI.DataAccess.CQRS.Querries.SuppliersQuerry;
 using StockAPI.DataAccess.Entities;
 
 namespace StockApi.ApplicationServices.API.Handlers.Suppliershandler
 {
     public class GetSuppliersHandler : IRequestHandler<GetSuppliersRequest, GetSuppliersResponse>
     {
-        private readonly IRepository<Supplier> supplierRepository;
         private readonly IMapper mapper;
-        public GetSuppliersHandler(IRepository<Supplier> supplierRepository, IMapper mapper)
+        private readonly IQuerryExecutor querryExecutor;
+        public GetSuppliersHandler(IMapper mapper, IQuerryExecutor querryExecutor)
         {
-            this.supplierRepository = supplierRepository;
             this.mapper = mapper;
+            this.querryExecutor = querryExecutor;
         }
-        public Task<GetSuppliersResponse> Handle(GetSuppliersRequest request, CancellationToken cancellationToken)
+        public async Task<GetSuppliersResponse> Handle(GetSuppliersRequest request, CancellationToken cancellationToken)
         {
-            var suppliers = this.supplierRepository.GetAll();
+            var querry = new GetSuppliersQuerry();
+            var suppliers = await querryExecutor.Execute(querry);
             var mappedSuppliers = this.mapper.Map<List<Domain.Models.Supplier>>(suppliers);
    
             var response = new GetSuppliersResponse()
             {
                 Data = mappedSuppliers,
             };
-            return Task.FromResult(response);
+            return response;
 
         }
 

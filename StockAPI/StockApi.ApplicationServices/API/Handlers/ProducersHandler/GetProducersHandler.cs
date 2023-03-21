@@ -4,29 +4,35 @@ using Microsoft.Identity.Client;
 using StockApi.ApplicationServices.API.Domain.ItemServices;
 using StockApi.ApplicationServices.API.Domain.ProducerService;
 using StockAPI.DataAccess;
+using StockAPI.DataAccess.CQRS;
+using StockAPI.DataAccess.CQRS.Querries.ItemsQuerry;
+using StockAPI.DataAccess.CQRS.Querries.ProducersQuerry;
 using StockAPI.DataAccess.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
 {
     public class GetProducersHandler : IRequestHandler<GetProducersRequest, GetProducersResponse>
     {
-        private readonly IRepository<Producer> producersRepository;
+        private readonly IQuerryExecutor querryExecutor;
         private readonly IMapper mapper;
 
-        public GetProducersHandler(IRepository<Producer> producersRepository, IMapper mapper) 
+        public GetProducersHandler(IMapper mapper, IQuerryExecutor querryExecutor)
         {
-            this.producersRepository = producersRepository;
             this.mapper = mapper;
+            this.querryExecutor = querryExecutor;
+
         }
-        public Task<GetProducersResponse> Handle(GetProducersRequest request, CancellationToken cancellationToken)
+        public async Task<GetProducersResponse> Handle(GetProducersRequest request, CancellationToken cancellationToken)
         {
-            var producers = this.producersRepository.GetAll();
+            var query = new GetProducersQuerry();
+            var producers = await querryExecutor.Execute(query);
             var mappedProducers = this.mapper.Map<List<Domain.Models.Producer>>(producers);
             var response = new GetProducersResponse()
             {
                 Data = mappedProducers,
             };
-            return Task.FromResult(response);
+            return response;
 
 
         }

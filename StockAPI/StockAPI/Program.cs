@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using StockApi.ApplicationServices.API.Domain;
 using StockApi.ApplicationServices.Mappings;
 using StockAPI.DataAccess;
+using StockAPI.DataAccess.CQRS;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<IQuerryExecutor, QuerryExecutor>();
 builder.Services.AddAutoMapper(typeof(ItemsProfile).Assembly);
 builder.Services.AddMediatR(typeof(ResponseBase<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
