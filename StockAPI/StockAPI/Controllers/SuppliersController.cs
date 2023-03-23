@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StockApi.ApplicationServices.API.Domain.ItemServices;
+using StockApi.ApplicationServices.API.Domain.ProducerService;
 using StockApi.ApplicationServices.API.Domain.SupplierServices;
 using StockAPI.DataAccess;
 using StockAPI.DataAccess.Entities;
@@ -19,6 +20,13 @@ namespace StockAPI.Controllers
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> GetAllSuppliers([FromQuery] GetSuppliersRequest request)
+        {
+            var response = await this.mediator.Send(request);
+            return this.Ok(response);
+        }
+        [HttpPost]
+        [Route("")]
+        public async Task<IActionResult> AddSupplier([FromBody] AddSupplierRequest request)
         {
             var response = await this.mediator.Send(request);
             return this.Ok(response);
