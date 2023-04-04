@@ -22,6 +22,15 @@ namespace StockApi.ApplicationServices.Mappings
             .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
             .ForMember(x => x.ItemName, y => y.MapFrom(z => z.ItemName))
             .ForMember(x => x.Category, y => y.MapFrom(z => z.Category));
+
+            this.CreateMap<DeleteItemRequest, StockAPI.DataAccess.Entities.Item>()
+            .ForMember(x => x.Id, y => y.MapFrom(z => z.DeleteId));
+
+            this.CreateMap<UpdateItemRequest, StockAPI.DataAccess.Entities.Item>()
+            .ForMember(x => x.Id, y => y.MapFrom(z => z.UpdateId))
+            .ForMember(x => x.ItemName, y => y.MapFrom(z => z.ItemName))
+            .ForMember(x => x.Category, y => y.MapFrom(z => z.Category))
+            .ForMember(x => x.SupplierId, y => y.MapFrom(z => z.SupplierId));
         }
     }
 }
