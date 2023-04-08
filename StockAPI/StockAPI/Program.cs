@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web;
 using StockApi.ApplicationServices.API.Domain;
 using StockApi.ApplicationServices.API.Validators.Producer;
 using StockApi.ApplicationServices.Mappings;
@@ -9,6 +10,9 @@ using StockAPI.DataAccess;
 using StockAPI.DataAccess.CQRS;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+builder.Host.UseNLog();
 
 // Add services to the container.
 builder.Services.AddMvcCore()

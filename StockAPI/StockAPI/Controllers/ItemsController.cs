@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StockApi.ApplicationServices.API.Domain.ItemServices;
-using StockApi.ApplicationServices.API.Domain.ProducerService;
 
 namespace StockAPI.Controllers
 {
@@ -9,8 +8,10 @@ namespace StockAPI.Controllers
     [Route("[controller]")]
     public class ItemsController : ApiControllerBase
     {
-        public ItemsController(IMediator mediator) : base(mediator) 
+        private readonly ILogger<ItemsController> _logger;
+        public ItemsController(IMediator mediator, ILogger<ItemsController> logger) : base(mediator) 
         {
+            _logger = logger;
         }
 
         [HttpGet]
@@ -49,6 +50,7 @@ namespace StockAPI.Controllers
         [Route("{itemId}")]
         public Task<IActionResult> DeleteItem([FromRoute] int itemId)
         {
+            _logger.LogWarning($"Item with id: {itemId} DELETE action invoked.");
             var request = new DeleteItemRequest()
             {
                 DeleteId = itemId
