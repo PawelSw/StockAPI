@@ -12,7 +12,9 @@ namespace StockAPI.DataAccess.CQRS.Querries.ProducersQuerry
     {
         public override Task<List<Producer>> Execute(StockApiStorageContext context)
         {
-            return context.Producers.ToListAsync();
+            return context.Producers
+                .Include(x => x.Items)
+                .ToListAsync();
 
         }
     }

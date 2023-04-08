@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StockApi.ApplicationServices.API.Domain.ProducerService;
 using StockApi.ApplicationServices.API.Domain.SupplierServices;
 using StockAPI.DataAccess;
 using StockAPI.DataAccess.Entities;
@@ -8,71 +9,60 @@ namespace StockAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SuppliersController : ControllerBase
+    public class SuppliersController : ApiControllerBase
     {
-        private readonly IMediator mediator;
-        public SuppliersController(IMediator mediator)
+        public SuppliersController(IMediator mediator) : base (mediator)
         {
-            this.mediator = mediator;
         }
+
         [HttpGet]
         [Route("AllSuppliers")]
-        public async Task<IActionResult> GetAllSuppliers([FromQuery] GetSuppliersRequest request)
+        public Task<IActionResult> GetAllSuppliers([FromQuery] GetSuppliersRequest request)
         {
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+            return this.HandleRequest<GetSuppliersRequest, GetSuppliersResponse>(request);
         }
 
         [HttpGet]
         [Route("Name")]
-        public async Task<IActionResult> GetSupplierByName([FromQuery] GetSupplierByNameRequest request)
+        public Task<IActionResult> GetSupplierByName([FromQuery] GetSupplierByNameRequest request)
         {
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+            return this.HandleRequest<GetSupplierByNameRequest, GetSupplierByNameResponse>(request);
         }
 
         [HttpGet]
         [Route("{supplierId}")]
-        public async Task<IActionResult> GetSupplierById([FromRoute] int supplierId)
+        public Task<IActionResult> GetSupplierById([FromRoute] int supplierId)
         {
             var request = new GetSupplierByIdRequest()
             {
                 SupplierId = supplierId
             };
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+            return this.HandleRequest<GetSupplierByIdRequest, GetSupplierByIdResponse>(request);
         }
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> AddSupplier([FromBody] AddSupplierRequest request)
+        public Task<IActionResult> AddSupplier([FromBody] AddSupplierRequest request)
         {
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+            return this.HandleRequest<AddSupplierRequest, AddSupplierResponse>(request);
         }
         [HttpDelete]
         [Route("{supplierId}")]
-        public async Task<IActionResult> DeleteItem([FromRoute] int supplierId)
+        public Task<IActionResult> DeleteSupplier([FromRoute] int supplierId)
         {
             var request = new DeleteSupplierRequest()
             {
                 DeleteId = supplierId
             };
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
-            // return this.HandleRequest<DeleteItemRequest, DeleteItemResponse>(request);
+
+            return this.HandleRequest<DeleteSupplierRequest, DeleteSupplierResponse>(request);
         }
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateSupplierById([FromRoute] int id, [FromBody] UpdateSupplierRequest request)
+        public Task<IActionResult> UpdateSupplierById([FromRoute] int id, [FromBody] UpdateSupplierRequest request)
         {
             request.UpdateId = id;
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
-
-
-            //request.UpdateId = id;
-            //return this.HandleRequest<UpdateProductRequest, UpdateProductResponse>(request);
+            return this.HandleRequest<UpdateSupplierRequest, UpdateSupplierResponse>(request);
         }
 
     }

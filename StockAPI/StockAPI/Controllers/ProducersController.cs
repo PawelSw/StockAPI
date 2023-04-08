@@ -8,72 +8,61 @@ namespace StockAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProducersController : ControllerBase
+    public class ProducersController : ApiControllerBase
     {
-        private readonly IMediator mediator;
-        public ProducersController(IMediator mediator)
+        public ProducersController(IMediator mediator) : base(mediator)
         {
-            this.mediator = mediator;
         }
         [HttpGet]
         [Route("AllProducers")]
-        public async Task<IActionResult> GetAllProducers([FromQuery] GetProducersRequest request)
+        public Task<IActionResult> GetAllProducers([FromQuery] GetProducersRequest request)
         {
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+            return this.HandleRequest<GetProducersRequest, GetProducersResponse>(request); 
         }
 
         [HttpGet]
         [Route("Name")]
-        public async Task<IActionResult> GetItemByName([FromQuery] GetProducerByNameRequest request)
+        public Task<IActionResult> GetProducerByName([FromQuery] GetProducerByNameRequest request)
         {
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+            return this.HandleRequest<GetProducerByNameRequest, GetProducerByNameResponse>(request);
         }
 
         [HttpGet]
         [Route("{producerId}")]
-        public async Task<IActionResult> GetProducerById([FromRoute] int producerId)
+        public Task<IActionResult> GetProducerById([FromRoute] int producerId)
         {
             var request = new GetProducerByIdRequest()
             {
                 ProducerId = producerId
             };
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+            return this.HandleRequest<GetProducerByIdRequest, GetProducerByIdResponse>(request);
         }
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> AddProducer([FromBody] AddProducerRequest request)
+        public Task<IActionResult> AddProducer([FromBody] AddProducerRequest request)
         {
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
+
+            return this.HandleRequest<AddProducerRequest, AddProducerResponse>(request);
         }
         [HttpDelete]
         [Route("{producerId}")]
-        public async Task<IActionResult> DeleteItem([FromRoute] int producerId)
+        public Task<IActionResult> DeleteProducer([FromRoute] int producerId)
         {
             var request = new DeleteProducerRequest()
             {
                 DeleteId = producerId
             };
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
-            // return this.HandleRequest<DeleteItemRequest, DeleteItemResponse>(request);
+         
+            return this.HandleRequest<DeleteProducerRequest, DeleteProducerResponse>(request);
         }
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateProducerById([FromRoute] int id, [FromBody] UpdateProducerRequest request)
+        public Task<IActionResult> UpdateProducerById([FromRoute] int id, [FromBody] UpdateProducerRequest request)
         {
             request.UpdateId = id;
-            var response = await this.mediator.Send(request);
-            return this.Ok(response);
-
-
-            //request.UpdateId = id;
-            //return this.HandleRequest<UpdateProductRequest, UpdateProductResponse>(request);
+            return this.HandleRequest<UpdateProducerRequest, UpdateProducerResponse>(request);
         }
     }
 }

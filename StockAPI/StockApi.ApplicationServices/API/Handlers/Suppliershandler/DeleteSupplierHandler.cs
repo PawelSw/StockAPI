@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StockAPI.DataAccess.CQRS.Querries.SuppliersQuerry;
 using StockAPI.DataAccess.CQRS.Commands.SuppliersCommand;
+using StockApi.ApplicationServices.API.ErrorHandling;
 
 namespace StockApi.ApplicationServices.API.Handlers.Suppliershandler
 {
@@ -35,15 +36,15 @@ namespace StockApi.ApplicationServices.API.Handlers.Suppliershandler
             {
                 Id = request.DeleteId
             };
-            //var product = await _querryExecutor.Execute(query);
+            var supplier = await _querryExecutor.Execute(query);
 
-            //if (product is null)
-            //{
-            //    return new DeleteProductResponse()
-            //    {
-            //        Error = new ErrorModel(ErrorType.NotFound)
-            //    };
-            //}
+            if (supplier is null)
+            {
+                return new DeleteSupplierResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
 
             var mappedSupplier = _mapper.Map<StockAPI.DataAccess.Entities.Supplier>(request);
             var command = new DeleteSupplierCommand()

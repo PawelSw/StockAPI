@@ -1,6 +1,9 @@
+using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StockApi.ApplicationServices.API.Domain;
+using StockApi.ApplicationServices.API.Validators.Producer;
 using StockApi.ApplicationServices.Mappings;
 using StockAPI.DataAccess;
 using StockAPI.DataAccess.CQRS;
@@ -8,6 +11,12 @@ using StockAPI.DataAccess.CQRS;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMvcCore()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddProducerRequestValidator>());
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.AddTransient<ICommandExecutor, CommandExecutor>();
 builder.Services.AddTransient<IQuerryExecutor, QuerryExecutor>();
 builder.Services.AddAutoMapper(typeof(ItemsProfile).Assembly);

@@ -5,6 +5,7 @@ using StockAPI.DataAccess.CQRS;
 using StockApi.ApplicationServices.API.Domain.ProducerService;
 using StockAPI.DataAccess.CQRS.Querries.ProducersQuerry;
 using MediatR;
+using StockApi.ApplicationServices.API.ErrorHandling;
 
 namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
 {
@@ -23,8 +24,16 @@ namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
             {
                 Id = request.ProducerId
             };
-            var producers = await querryExecutor.Execute(query);
-            var mappedProducers = mapper.Map<Domain.Models.Producer>(producers);
+            var producer = await querryExecutor.Execute(query);
+
+            if (producer is null)
+            {
+                return new GetProducerByIdResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
+            var mappedProducers = mapper.Map<Domain.Models.Producer>(producer);
 
             var response = new GetProducerByIdResponse()
             {

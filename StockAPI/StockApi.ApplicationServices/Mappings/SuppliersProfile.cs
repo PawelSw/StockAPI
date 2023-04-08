@@ -17,7 +17,8 @@ namespace StockApi.ApplicationServices.Mappings
             this.CreateMap<StockAPI.DataAccess.Entities.Supplier, API.Domain.Models.Supplier>()
             .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
             .ForMember(x => x.Name, y => y.MapFrom(z => z.Name))
-            .ForMember(x => x.Address, y => y.MapFrom(z => z.Address));
+            .ForMember(x => x.Address, y => y.MapFrom(z => z.Address))
+             .ForMember(x => x.SuppliersItems, y => y.MapFrom(z => z.Items != null ? z.Items.Select(x => x.ItemName) : new List<string>()));
 
             this.CreateMap<DeleteSupplierRequest, StockAPI.DataAccess.Entities.Supplier>()
             .ForMember(x => x.Id, y => y.MapFrom(z => z.DeleteId));

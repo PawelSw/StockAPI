@@ -3,6 +3,7 @@ using StockApi.ApplicationServices.API.Domain.ItemServices;
 using StockAPI.DataAccess.CQRS.Querries.ItemsQuerry;
 using StockAPI.DataAccess.CQRS;
 using MediatR;
+using StockApi.ApplicationServices.API.ErrorHandling;
 
 namespace StockApi.ApplicationServices.API.Handlers.ItemsHandler
 {
@@ -21,8 +22,16 @@ namespace StockApi.ApplicationServices.API.Handlers.ItemsHandler
             {
                 Id = request.ItemId
             };
-            var items = await querryExecutor.Execute(query);
-            var mappedItems = mapper.Map<Domain.Models.Item>(items);
+            var item = await querryExecutor.Execute(query);
+
+            if (item is null)
+            {
+                return new GetItemByIdResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
+            var mappedItems = mapper.Map<Domain.Models.Item>(item);
 
             var response = new GetItemByIdResponse()
             {

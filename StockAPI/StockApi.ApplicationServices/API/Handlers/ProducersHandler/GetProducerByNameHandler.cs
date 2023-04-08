@@ -23,8 +23,10 @@ namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
             {
                 Name = request.Name,
             };
-            var items = await querryExecutor.Execute(query);
-            var mappedItems = mapper.Map<List<Domain.Models.Producer>>(items);
+            var producer = await querryExecutor.Execute(query);
+
+
+            var mappedItems = mapper.Map<List<Domain.Models.Producer>>(producer);
 
             var response = new GetProducerByNameResponse()
             {

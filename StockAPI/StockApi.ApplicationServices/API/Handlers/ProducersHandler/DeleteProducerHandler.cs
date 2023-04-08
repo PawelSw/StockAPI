@@ -7,6 +7,7 @@ using StockAPI.DataAccess.CQRS;
 using StockApi.ApplicationServices.API.Domain.ProducerService;
 using StockAPI.DataAccess.CQRS.Querries.ProducersQuerry;
 using StockAPI.DataAccess.CQRS.Commands.ProducersCommand;
+using StockApi.ApplicationServices.API.ErrorHandling;
 
 namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
 {
@@ -30,15 +31,15 @@ namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
             {
                 Id = request.DeleteId
             };
-            //var product = await _querryExecutor.Execute(query);
+            var producer = await _querryExecutor.Execute(query);
 
-            //if (product is null)
-            //{
-            //    return new DeleteProductResponse()
-            //    {
-            //        Error = new ErrorModel(ErrorType.NotFound)
-            //    };
-            //}
+            if (producer is null)
+            {
+                return new DeleteProducerResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
 
             var mappedProducer = _mapper.Map<StockAPI.DataAccess.Entities.Producer>(request);
             var command = new DeleteProducerCommand()

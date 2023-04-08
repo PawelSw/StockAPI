@@ -4,6 +4,7 @@ using StockApi.ApplicationServices.API.Domain.ItemServices;
 using StockAPI.DataAccess.CQRS.Commands.ItemsCommand;
 using StockAPI.DataAccess.CQRS.Querries.ItemsQuerry;
 using StockAPI.DataAccess.CQRS;
+using StockApi.ApplicationServices.API.ErrorHandling;
 
 namespace StockApi.ApplicationServices.API.Handlers.ItemsHandler
 {
@@ -27,15 +28,15 @@ namespace StockApi.ApplicationServices.API.Handlers.ItemsHandler
             {
                 Id = request.DeleteId
             };
-            var product = await _querryExecutor.Execute(query);
+            var item = await _querryExecutor.Execute(query);
 
-            //if (product is null)
-            //{
-            //    return new DeleteProductResponse()
-            //    {
-            //        Error = new ErrorModel(ErrorType.NotFound)
-            //    };
-            //}
+            if (item is null)
+            {
+                return new DeleteItemResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
 
             var mappeditem = _mapper.Map<StockAPI.DataAccess.Entities.Item>(request);
             var command = new DeleteItemCommand()
