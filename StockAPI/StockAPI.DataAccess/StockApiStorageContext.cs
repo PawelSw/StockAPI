@@ -12,5 +12,6 @@ namespace StockAPI.DataAccess
         public DbSet<Item> Items { get; set; }
         public DbSet<Producer> Producers { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

@@ -1,18 +1,28 @@
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 using StockApi.ApplicationServices.API.Domain;
 using StockApi.ApplicationServices.API.Validators.Producer;
+using StockApi.ApplicationServices.Components.PasswordHasher;
 using StockApi.ApplicationServices.Mappings;
+using StockAPI.Authentication;
 using StockAPI.DataAccess;
 using StockAPI.DataAccess.CQRS;
+using StockAPI.DataAccess.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
 builder.Host.UseNLog();
+
+builder.Services.AddAuthentication("BasicAuthentication")
+   .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+builder.Services.AddScoped<IPasswordHasher<User>, BCryptPasswordHasher<User>>();
 
 // Add services to the container.
 builder.Services.AddMvcCore()
@@ -43,7 +53,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
