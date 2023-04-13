@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using StockApi.ApplicationServices.API.Domain.SupplierServices;
+using StockAPI.DataAccess.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace StockApi.ApplicationServices.API.Domain.UserServices
@@ -14,5 +15,6 @@ namespace StockApi.ApplicationServices.API.Domain.UserServices
         public string UserName { get; set; }
    
         public string Password { get; set; }
+        public UserRole Role { get; set; }
     }
 }

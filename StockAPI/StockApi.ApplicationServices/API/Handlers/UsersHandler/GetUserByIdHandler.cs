@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using StockApi.ApplicationServices.API.Domain.SupplierServices;
 using StockApi.ApplicationServices.API.Domain.UserServices;
 using StockApi.ApplicationServices.API.ErrorHandling;
-using StockAPI.DataAccess.CQRS.Querries.SuppliersQuerry;
 using StockAPI.DataAccess.CQRS;
 using StockAPI.DataAccess.CQRS.Querries.UsersQuerry;
 

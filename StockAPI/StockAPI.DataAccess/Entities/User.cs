@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StockAPI.DataAccess.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace StockAPI.DataAccess.Entities
 {
@@ -16,6 +17,9 @@ namespace StockAPI.DataAccess.Entities
         [Required]
         [MaxLength(150)]
         public string Password { get; set; }
+        [Required]
+        public UserRole Role { get; set; }
+
 
       
     }

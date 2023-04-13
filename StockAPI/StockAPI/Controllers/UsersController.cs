@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StockApi.ApplicationServices.API.Domain.SupplierServices;
 using StockApi.ApplicationServices.API.Domain.UserServices;
 
 namespace StockAPI.Controllers
@@ -25,13 +24,6 @@ namespace StockAPI.Controllers
             return this.HandleRequest<GetUsersRequest, GetUsersResponse>(request);
         }
 
-        //[HttpGet]
-        //[Route("UserName")]
-        //public Task<IActionResult> GetUserByUsername([FromQuery] GetUserByNameRequest request)
-        //{
-        //    return this.HandleRequest<GetUserByNameRequest, GetUserByNameResponse>(request);
-        //}
-
         [AllowAnonymous]
         [HttpPost]
         [Route("")]
@@ -42,6 +34,7 @@ namespace StockAPI.Controllers
 
         [HttpGet]
         [Route("{userId}")]
+    
         public Task<IActionResult> GetUserById([FromRoute] int userId)
         {
             var request = new GetUserByIdRequest()

@@ -1,4 +1,6 @@
-﻿namespace StockApi.ApplicationServices.API.Domain.Models
+﻿using StockAPI.DataAccess.Enums;
+
+namespace StockApi.ApplicationServices.API.Domain.Models
 {
     public class User
     {
@@ -7,6 +9,7 @@
 
         public string LastName { get; set; }
         public string UserName { get; set; }
-       
+        public UserRole Role { get; set; }
+
     }
 }
