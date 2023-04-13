@@ -1,22 +1,23 @@
 ﻿using AutoMapper;
 using MediatR;
-using StockApi.ApplicationServices.API.Domain.ItemServices;
 using StockApi.ApplicationServices.API.Domain.SupplierServices;
 using StockAPI.DataAccess.CQRS.Commands.SuppliersCommand;
-using StockAPI.DataAccess.CQRS.Querries.ItemsQuerry;
-using StockAPI.DataAccess.CQRS;
 using StockAPI.DataAccess.CQRS.Querries.SuppliersQuerry;
+using StockAPI.DataAccess.CQRS;
+using StockApi.ApplicationServices.API.Domain.UserServices;
+using StockAPI.DataAccess.CQRS.Querries.UsersQuerry;
+using StockAPI.DataAccess.CQRS.Commands.UsersCommand;
 using StockApi.ApplicationServices.API.ErrorHandling;
 
-namespace StockApi.ApplicationServices.API.Handlers.Suppliershandler
+namespace StockApi.ApplicationServices.API.Handlers.UsersHandler
 {
-    public class UpdateSupplierHandler : IRequestHandler<UpdateSupplierRequest, UpdateSupplierResponse>
+    public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, UpdateUserResponse>
     {
         private readonly IMapper _mapper;
         private readonly IQuerryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
 
-        public UpdateSupplierHandler(
+        public UpdateUserHandler(
             IMapper mapper,
             IQuerryExecutor queryExecutor,
             ICommandExecutor commandExecutor)
@@ -26,34 +27,34 @@ namespace StockApi.ApplicationServices.API.Handlers.Suppliershandler
             _commandExecutor = commandExecutor;
         }
 
-        public async Task<UpdateSupplierResponse> Handle(UpdateSupplierRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateUserResponse> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
         {
-            var query = new GetSupplierByIdQuerry()
+            var query = new GetUserByIdQuerry()
             {
                 Id = request.UpdateId
             };
-            var supplier = await _queryExecutor.Execute(query);
+            var user = await _queryExecutor.Execute(query);
 
-            if (supplier is null)
+            if (user is null)
             {
-                return new UpdateSupplierResponse()
+                return new UpdateUserResponse()
                 {
                     Error = new ErrorModel(ErrorType.NotFound)
                 };
             }
 
-            var mappedSupplier = _mapper.Map<StockAPI.DataAccess.Entities.Supplier>(request);
+            var mappedSupplier = _mapper.Map<StockAPI.DataAccess.Entities.User>(request);
 
-            var command = new UpdateSupplierCommand()
+            var command = new UpdateUserCommand()
             {
                 Parameter = mappedSupplier,
             };
 
             var updatedSupplier = await _commandExecutor.Execute(command);
 
-            var response = new UpdateSupplierResponse()
+            var response = new UpdateUserResponse()
             {
-                Data = _mapper.Map<Domain.Models.Supplier>(updatedSupplier)
+                Data = _mapper.Map<Domain.Models.User>(updatedSupplier)
             };
 
             return response;

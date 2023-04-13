@@ -7,6 +7,7 @@ using StockAPI.DataAccess.CQRS;
 using StockApi.ApplicationServices.API.Domain.ProducerService;
 using StockAPI.DataAccess.CQRS.Querries.ProducersQuerry;
 using StockAPI.DataAccess.CQRS.Commands.ProducersCommand;
+using StockApi.ApplicationServices.API.ErrorHandling;
 
 namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
 {
@@ -32,15 +33,15 @@ namespace StockApi.ApplicationServices.API.Handlers.ProducersHandler
             {
                 Id = request.UpdateId
             };
-            //var product = await _queryExecutor.Execute(query);
+            var producer = await _queryExecutor.Execute(query);
 
-            //if (product is null)
-            //{
-            //    return new UpdateProductResponse()
-            //    {
-            //        Error = new ErrorModel(ErrorType.NotFound)
-            //    };
-            //}
+            if (producer is null)
+            {
+                return new UpdateProducerResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
 
             var mappedProducer = _mapper.Map<StockAPI.DataAccess.Entities.Producer>(request);
 

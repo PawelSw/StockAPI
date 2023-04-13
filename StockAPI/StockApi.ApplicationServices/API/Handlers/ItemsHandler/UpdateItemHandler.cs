@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using StockApi.ApplicationServices.API.Domain.ItemServices;
+using StockApi.ApplicationServices.API.ErrorHandling;
 using StockAPI.DataAccess.CQRS;
 using StockAPI.DataAccess.CQRS.Commands.ItemsCommand;
 using StockAPI.DataAccess.CQRS.Querries.ItemsQuerry;
@@ -29,15 +30,15 @@ namespace StockApi.ApplicationServices.API.Handlers.ItemsHandler
             {
                 Id = request.UpdateId
             };
-            //var product = await _queryExecutor.Execute(query);
+            var item = await _queryExecutor.Execute(query);
 
-            //if (product is null)
-            //{
-            //    return new UpdateProductResponse()
-            //    {
-            //        Error = new ErrorModel(ErrorType.NotFound)
-            //    };
-            //}
+            if (item is null)
+            {
+                return new UpdateItemResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
 
             var mappedProduct = _mapper.Map<StockAPI.DataAccess.Entities.Item>(request);
 
